@@ -1,6 +1,7 @@
 package com.aquasense.fogapplication.feedguard.data.service;
 
 import com.aquasense.fogapplication.feedguard.data.DeviceData;
+import com.aquasense.fogapplication.feedguard.infrastructure.persistence.jpa.repositories.DeviceDataRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,12 @@ public class DeviceCommunicationService {
 
     private MqttClient mqttClient;
     private Map<String, Consumer<DeviceData>> dataHandlers = new HashMap<>();
+
+    private final DeviceDataRepository deviceDataRepository;
+
+    public DeviceCommunicationService(DeviceDataRepository deviceDataRepository) {
+        this.deviceDataRepository = deviceDataRepository;
+    }
 
     @PostConstruct
     public void initialize() {
@@ -73,6 +80,15 @@ public class DeviceCommunicationService {
     }
 
     private DeviceData parseDeviceData(MqttMessage message) {
+        /*String payload = new String(message.getPayload());
+        String[] parts = payload.split(",");
+        String deviceId = parts[0];
+        String type = parts[1];
+        Float value = Float.parseFloat(parts[2]);
+        String status = parts[3];
+
+        return new DeviceData(deviceId, type, value, status);*/
+
         String payload = new String(message.getPayload());
         String[] parts = payload.split(",");
         String deviceId = parts[0];
@@ -80,7 +96,9 @@ public class DeviceCommunicationService {
         Float value = Float.parseFloat(parts[2]);
         String status = parts[3];
 
-        return new DeviceData(deviceId, type, value, status);
+        DeviceData deviceData = new DeviceData(deviceId, type, value, status);
+        // Guardar en BD
+        return deviceDataRepository.save(deviceData);
     }
 
     public void registerDeviceDataHandler(String deviceId, Consumer<DeviceData> handler) {
