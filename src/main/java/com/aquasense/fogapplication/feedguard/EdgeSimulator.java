@@ -70,6 +70,6 @@ public class EdgeSimulator implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(EdgeSimulator.class, args);
+        System.setProperty("spring.profiles.active", "simulator");SpringApplication.run(EdgeSimulator.class, args);
     }
 }
