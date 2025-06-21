@@ -26,10 +26,20 @@ public class CloudAuthService {
     @Value("${cloud.backend.auth.password}")
     private String password;
 
+    @Value("${cloud.backend.auth.token:#{null}}")
+    private String configuredToken;
+
     private String authToken;
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String getAuthToken() {
+        // Si hay un token configurado en properties, usarlo directamente
+        if (configuredToken != null && !configuredToken.isEmpty()) {
+            log.debug("Usando token preconfigurado");
+            return configuredToken;
+        }
+
+        // Si no hay token o está expirado, autenticar
         if (authToken == null) {
             authenticate();
         }
@@ -38,6 +48,7 @@ public class CloudAuthService {
 
     private void authenticate() {
         try {
+            log.info("Intentando autenticar con el backend: {}", cloudUrl);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -55,6 +66,8 @@ public class CloudAuthService {
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 authToken = (String) response.getBody().get("token");
                 log.info("Autenticación con backend exitosa");
+            } else {
+                log.warn("La autenticación falló, código de respuesta: {}", response.getStatusCode());
             }
         } catch (Exception e) {
             log.error("Error autenticando con backend cloud", e);

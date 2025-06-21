@@ -24,17 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class PondManagementService {
     private final DeviceCommunicationService communicationService;
-    @Value("${cloud.backend.url}")
-    private String cloudBackendUrl;
-
-    @Value("${cloud.backend.auth.username}")
-    private String username;
-
-    @Value("${cloud.backend.auth.password}")
-    private String password;
-
-    @Value("${cloud.backend.auth.token}")
-    private String token;
 
     private final Map<String, Map<String, DeviceData>> pondDeviceData = new ConcurrentHashMap<>();
 
@@ -83,37 +72,5 @@ public class PondManagementService {
         communicationService.sendControlCommand(feederId, command, value);
         log.info("Comando enviado al alimentador {} del estanque {}", feederId, pondId);
         return true;
-    }
-
-    @Scheduled(fixedDelayString = "${cloud.backend.sync.interval}")
-    public void syncWithCloud() {
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            // Aplicar autenticación según lo configurado
-            if (token != null && !token.isEmpty()) {
-                // Autenticación con token Bearer
-                headers.setBearerAuth(token);
-                log.info("Usando autenticación con token Bearer");
-            } else if (username != null && !username.isEmpty() && password != null) {
-                // Autenticación básica usuario/contraseña
-                headers.setBasicAuth(username, password);
-                log.info("Usando autenticación básica");
-            }
-
-            // Crear entidad HTTP con los datos y los encabezados
-            HttpEntity<Map<String, Map<String, DeviceData>>> entity =
-                    new HttpEntity<>(pondDeviceData, headers);
-
-            // Enviar al backend
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                    cloudBackendUrl + "/sync", entity, String.class);
-
-            log.info("Datos sincronizados con la nube. Estado: {}", response.getStatusCode());
-        } catch (Exception e) {
-            log.error("Error al sincronizar datos con la nube", e);
-        }
     }
 }

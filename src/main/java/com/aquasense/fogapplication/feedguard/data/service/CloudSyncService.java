@@ -48,11 +48,18 @@ public class CloudSyncService {
             // Transformar a DTOs para el cloud
             List<CloudSensorDataDTO> dataToSync = unsyncedData.stream()
                     .map(data -> new CloudSensorDataDTO(
-                            data.getDeviceId(),
+                            data.getDeviceId(),  // Usar deviceId en vez de id
                             data.getType(),
                             data.getValue()
                     ))
                     .collect(Collectors.toList());
+
+            // Registrar lo que se está enviando para depuración
+            log.info("Enviando {} registros a la nube. Primer registro: deviceId={}, type={}, value={}",
+                    dataToSync.size(),
+                    dataToSync.get(0).getDeviceId(),
+                    dataToSync.get(0).getType(),
+                    dataToSync.get(0).getValue());
 
             boolean success = sendDataToCloud(dataToSync);
 
@@ -74,17 +81,21 @@ public class CloudSyncService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // Usar el token de autenticación del servicio de autenticación
         String token = cloudAuthService.getAuthToken();
         if (token != null) {
             headers.setBearerAuth(token);
+        } else {
+            log.warn("No se pudo obtener token de autenticación");
+            return false;
         }
 
         String url = cloudBackendUrl + syncEndpoint;
         HttpEntity<List<CloudSensorDataDTO>> entity = new HttpEntity<>(data, headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
+            log.debug("Enviando datos a: {}", url);
+            // Cambiar Map.class por String.class para coincidir con la respuesta del backend
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.info("Datos enviados correctamente al cloud");
@@ -94,7 +105,7 @@ public class CloudSyncService {
                 return false;
             }
         } catch (Exception e) {
-            log.error("Error en la comunicación con el cloud", e);
+            log.error("Error en la comunicación con el cloud: {}", e.getMessage());
             return false;
         }
     }
