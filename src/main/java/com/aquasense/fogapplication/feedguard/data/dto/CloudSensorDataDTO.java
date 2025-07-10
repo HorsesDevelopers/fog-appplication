@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CloudSensorDataDTO {
 
-    private String deviceId; // deviceId
+    private String deviceId;
     private String type;
     private Float value;
 }

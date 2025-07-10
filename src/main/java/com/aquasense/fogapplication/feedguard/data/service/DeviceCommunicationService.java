@@ -1,3 +1,4 @@
+/*
 package com.aquasense.fogapplication.feedguard.data.service;
 
 import com.aquasense.fogapplication.feedguard.data.DeviceData;
@@ -80,14 +81,16 @@ public class DeviceCommunicationService {
     }
 
     private DeviceData parseDeviceData(MqttMessage message) {
-        /*String payload = new String(message.getPayload());
+        */
+/*String payload = new String(message.getPayload());
         String[] parts = payload.split(",");
         String deviceId = parts[0];
         String type = parts[1];
         Float value = Float.parseFloat(parts[2]);
         String status = parts[3];
 
-        return new DeviceData(deviceId, type, value, status);*/
+        return new DeviceData(deviceId, type, value, status);*//*
+
 
         String payload = new String(message.getPayload());
         String[] parts = payload.split(",");
@@ -128,4 +131,4 @@ public class DeviceCommunicationService {
             log.error("Error al desconectar del broker MQTT", e);
         }
     }
-}
+}*/

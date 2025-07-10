@@ -5,7 +5,7 @@ import com.aquasense.fogapplication.feedguard.data.dto.CloudSensorDataDTO;
 import com.aquasense.fogapplication.feedguard.data.service.CloudAuthService;
 
 
-import com.aquasense.fogapplication.feedguard.infrastructure.persistence.jpa.repositories.DeviceDataRepository;
+// import com.aquasense.fogapplication.feedguard.infrastructure.persistence.jpa.repositories.DeviceDataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,16 +32,16 @@ public class CloudSyncService {
     private String syncEndpoint;
 
     private final CloudAuthService cloudAuthService;
-    private final DeviceDataRepository deviceDataRepository;
+   // private final DeviceDataRepository deviceDataRepository;
     private final RestTemplate restTemplate;
 
-    @Scheduled(fixedDelayString = "${cloud.backend.sync.interval}")
+    /*@Scheduled(fixedDelayString = "${cloud.backend.sync.interval}")
     public void syncWithCloud() {
         try {
             List<DeviceData> unsyncedData = deviceDataRepository.findByCloudSyncedFalse();
 
             if (unsyncedData.isEmpty()) {
-                log.info("No hay datos nuevos para sincronizar");
+                log.info("There is no new data to sync with the cloud");
                 return;
             }
 
@@ -55,7 +55,7 @@ public class CloudSyncService {
                     .collect(Collectors.toList());
 
             // Registrar lo que se está enviando para depuración
-            log.info("Enviando {} registros a la nube. Primer registro: deviceId={}, type={}, value={}",
+            log.info("Sending {} logs to the cloud. First register: deviceId={}, type={}, value={}",
                     dataToSync.size(),
                     dataToSync.get(0).getDeviceId(),
                     dataToSync.get(0).getType(),
@@ -74,7 +74,7 @@ public class CloudSyncService {
         } catch (Exception e) {
             log.error("Error al sincronizar datos con la nube", e);
         }
-    }
+    }*/
 
     @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 2000))
     private boolean sendDataToCloud(List<CloudSensorDataDTO> data) {
