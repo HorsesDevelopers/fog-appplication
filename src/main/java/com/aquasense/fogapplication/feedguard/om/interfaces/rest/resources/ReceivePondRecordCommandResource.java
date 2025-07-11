@@ -1,7 +1,7 @@
 package com.aquasense.fogapplication.feedguard.om.interfaces.rest.resources;
 
 public record ReceivePondRecordCommandResource(
-    String pondId,
+    Long pondId,
     float temp,
     float ph,
     float turbidity

@@ -7,6 +7,8 @@ import com.aquasense.fogapplication.feedguard.om.domain.services.PondRecordComma
 import com.aquasense.fogapplication.feedguard.om.infrastructure.persistence.jpa.repositories.PondRecordRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PondRecordCommandServiceImpl implements PondRecordCommandService {
 
@@ -17,7 +19,7 @@ public class PondRecordCommandServiceImpl implements PondRecordCommandService {
     }
 
     @Override
-    public void handle(CreatePondRecordCommand command) {
+    public List<PondRecord> handle(CreatePondRecordCommand command) {
         var tempRecord = new PondRecord(
             command.pondId(),
             command.temp(),
@@ -36,5 +38,7 @@ public class PondRecordCommandServiceImpl implements PondRecordCommandService {
         pondRecordRepository.save(tempRecord);
         pondRecordRepository.save(pHRecord);
         pondRecordRepository.save(turbidityRecord);
+
+        return List.of(tempRecord, pHRecord, turbidityRecord);
     }
 }
