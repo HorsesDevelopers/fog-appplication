@@ -1,4 +1,4 @@
-package com.aquasense.fogapplication.feedguard.data.service;
+package com.aquasense.fogapplication.feedguard.iam.infrastructure.authorization.sfs.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

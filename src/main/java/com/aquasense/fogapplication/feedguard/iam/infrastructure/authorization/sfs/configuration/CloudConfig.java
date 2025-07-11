@@ -1,4 +1,4 @@
-package com.aquasense.fogapplication.feedguard.data.config;
+package com.aquasense.fogapplication.feedguard.iam.infrastructure.authorization.sfs.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

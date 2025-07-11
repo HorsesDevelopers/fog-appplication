@@ -1,7 +1,6 @@
 package com.aquasense.fogapplication.feedguard.om.interfaces.rest;
 
-import com.aquasense.fogapplication.feedguard.data.dto.EdgePondDataDTO;
-import com.aquasense.fogapplication.feedguard.data.service.CloudSyncService;
+import com.aquasense.fogapplication.feedguard.iam.infrastructure.authorization.sfs.services.CloudSyncService;
 import com.aquasense.fogapplication.feedguard.om.domain.services.PondRecordCommandService;
 import com.aquasense.fogapplication.feedguard.om.interfaces.rest.resources.PondRecordDTO;
 import com.aquasense.fogapplication.feedguard.om.interfaces.rest.resources.ReceivePondRecordCommandResource;

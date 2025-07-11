@@ -1,7 +1,6 @@
-package com.aquasense.fogapplication.feedguard.data.service;
+package com.aquasense.fogapplication.feedguard.iam.infrastructure.authorization.sfs.services;
 
 import com.aquasense.fogapplication.feedguard.om.interfaces.rest.resources.PondRecordDTO;
-import com.aquasense.fogapplication.feedguard.om.interfaces.rest.resources.ReceivePondRecordCommandResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
